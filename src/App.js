@@ -1,25 +1,184 @@
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 
-function App() {
+function Window() {
+  const [searched, setSearched] = useState(false);
+  const [searchedItem, setSearchedItem] = useState('');
+  const [stockList, setStockList] = useState([]);
+
+  useEffect(() => {
+    const newStockList = [];
+    for (let i = 0; i < 20; i++) {
+      newStockList.push({ name: "Bomar", price: "4.00", percent: "4" });
+    }
+    setStockList(newStockList);
+  }, []);
+
+
+  function Header() {
+    return (
+      <div className="header">
+        {Logo()}
+        {Home()}
+      </div>
+    );
+  }
+
+  function Home() {
+    const homeClicked = (event) => {
+      event.preventDefault();
+      setSearched(false);
+    }
+
+    return (
+      <div className="home" onClick={homeClicked}>
+        Home
+      </div>
+    );
+  }
+
+  function Logo() {
+    return (
+      <div className="logo">
+        <img src={logo} alt="logo" />
+      </div>
+    );
+  }
+
+
+  //make a search bar
+  function SearchBar() {
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      const searchText = event.target.text.value;
+      setSearched(true);
+      setSearchedItem(searchText);
+    }
+
+    return (
+      <div className="searchBar">
+        <form onSubmit={handleSubmit}>
+          <div className="label">
+            <label className="label-text">Enter Stock Ticker Symbol</label>
+          </div>
+          <input type="text" className="textInput" name="text" placeholder="Type stock..." />
+          <button className="button" type="submit">Submit</button>
+        </form>
+      </div>
+    );
+  }
+
+  function GetStock(title) {
+    //webscraping stuff
+
+    // Fetch stock details based on searchedItem
+    // Example: Fetch data using axios and useEffect
+    // useEffect(() => {
+    //   axios.get(`API_ENDPOINT/${searchedItem}`)
+    //     .then(response => {
+    //       // Handle response data
+    //     })
+    //     .catch(error => {
+    //       // Handle error
+    //     });
+    // }, [searchedItem]);
+
+    
+  }
+
+  function Stock(title, price, percent) {
+    return (
+      <div className="outer">
+        <div className="stock">
+          <h1 className="stockName">{title}</h1>
+          <p className="stockPrice">Current Price: ${price}</p>
+          <p className="stockPercent">Percent Increase: {percent}%</p>
+        </div>
+      </div>
+    );
+  }
+
+  function StockPage() {
+    console.log(searched);
+    if (searched) {
+      return (
+        <div>
+          {StockDetails()}
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          {StockList()}
+        </div>
+      );
+    }
+  }
+
+  function StockList() {
+    const numberOfRows = Math.ceil(stockList.length / 4);
+    const rows = [];
+
+    for (let i = 0; i < numberOfRows; i++) {
+      const cells = [];
+
+      for (let j = 0; j < 4; j++) {
+        const index = i * 4 + j;
+        if (index < stockList.length) {
+          const stock = stockList[index];
+          cells.push(
+            <td key={index}>
+              {Stock(stock.name, stock.price, stock.percent)}
+            </td>
+          );
+        } else {
+          cells.push(<td key={j}></td>);
+        }
+      }
+
+      rows.push(<tr key={i}>{cells}</tr>);
+    }
+
+    return (
+      <table>
+        <tbody>
+          {rows}
+        </tbody>
+      </table>
+    );
+  }
+
+  function StockDetails() {
+    const stock = stockList.find(stock => stock.name === searchedItem);
+    //get stock
+    if(stock)
+    {
+      return (
+        <div>
+          {Stock(stock.name, stock.price, stock.percent)}
+        </div>
+      );
+    }
+    else
+    {
+      return (
+        <div>
+          No Stock Found
+        </div>
+      );
+    }
+    
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {Header()}
+      {SearchBar()}
+      {StockPage()}
     </div>
   );
 }
 
-export default App;
+export default Window;
