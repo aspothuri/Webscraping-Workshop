@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import './webscraping/newsscraper.js';
+import stockscrape from './webscraping/stockscraper';
 import axios from 'axios';
 
 function Window() {
@@ -9,11 +11,25 @@ function Window() {
   const [stockList, setStockList] = useState([]);
 
   useEffect(() => {
-    const newStockList = [];
-    for (let i = 0; i < 20; i++) {
-      newStockList.push({ name: "Bomar", price: "4.00", percent: "4" });
-    }
-    setStockList(newStockList);
+    const fetchStockData = async () => {
+      const newStockList = [];
+      const tickerList = ['AMZN', 'AAPL', 'XOM', 'GE', 'MSFT', 'BP', 'PG', 'WMT', 
+        'PFE', 'HBC', 'TM', 'JNJ', 'BAC', 'AIG', 'CVX', 'AMGN', 'GOOG', 'QCOM', 'AZN', 
+        'TEF', 'DELL', 'ABT', 'AXP', 'EBAY', 'ERICY', 'HMC', 'NSANY', 'YHOO', 'AET'];
+  
+      for (let i = 0; i < tickerList.length; i++) {
+        const tickerSymbol = tickerList[i];
+        try {
+          const { name, price, percent } = await stockscrape(tickerSymbol);
+          newStockList.push(name, price, percent);
+        } catch (error) {
+          console.error('Error fetching stock data for', tickerSymbol, ':', error);
+        }
+      }
+      setStockList(newStockList);
+    };
+  
+    fetchStockData();
   }, []);
 
 
