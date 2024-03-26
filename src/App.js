@@ -16,12 +16,16 @@ function Window() {
       const tickerList = ['AMZN', 'AAPL', 'XOM', 'GE', 'MSFT', 'BP', 'PG', 'WMT', 
         'PFE', 'HBC', 'TM', 'JNJ', 'BAC', 'AIG', 'CVX', 'AMGN', 'GOOG', 'QCOM', 'AZN', 
         'TEF', 'DELL', 'ABT', 'AXP', 'EBAY', 'ERICY', 'HMC', 'NSANY', 'YHOO', 'AET'];
-  
+    
       for (let i = 0; i < tickerList.length; i++) {
         const tickerSymbol = tickerList[i];
         try {
-          const { name, price, percent } = await stockscrape(tickerSymbol);
-          newStockList.push(name, price, percent);
+          const { name, price, percent} = await stockscrape(tickerSymbol);
+          newStockList.push({
+            name: name,
+            price: price,
+            percent: percent
+          });
         } catch (error) {
           console.error('Error fetching stock data for', tickerSymbol, ':', error);
         }

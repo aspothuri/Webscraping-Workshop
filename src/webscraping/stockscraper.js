@@ -1,13 +1,17 @@
 //const axios = require('axios');
 import axios from 'axios'
-const cheerio = require('cheerio');
-// import cheerio from 'cheerio'
+//const cheerio = require('cheerio');
+import cheerio from 'cheerio'
 
 
 
 async function stockscraper(tickerSymbol) {
     try {
-        const response = await axios.get(`https://finance.yahoo.com/quote/${tickerSymbol}`);
+        //const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        const targetUrl = `https://finance.yahoo.com/quote/${tickerSymbol}`;
+        const url = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+        const response = await axios.get(url);
+        //console.log('hello');
         const $ = cheerio.load(response.data);
 
         // Extracting price
@@ -17,7 +21,7 @@ async function stockscraper(tickerSymbol) {
 
         // Extracting daily percent change
         const dailyPercentChange = $('fin-streamer[data-symbol="' + tickerSymbol + '"][data-field="regularMarketChangePercent"] > span').text().trim();
-
+        console.log(tickerSymbol, dailyChange, dailyPercentChange);
         return { name: tickerSymbol, price: price, percent: dailyPercentChange };
     } catch (error) {
         console.error('Error:', error);
