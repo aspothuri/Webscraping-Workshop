@@ -23,15 +23,3 @@ async function stockscraper(tickerSymbol) {
 }
 
 export default stockscraper;
-
-// // Example usage
-// const tickerSymbol = 'AAPL'; // Replace with the desired stock ticker symbol
-// getStockData(tickerSymbol)
-//     .then(data => {
-//         if (data) {
-//             console.log('Price:', data.price);
-//             console.log('Daily Change:', data.dailyChange);
-//             console.log('Daily Percent Change:', data.dailyPercentChange);
-//         }
-//     })
-//     .catch(error => console.error('Error:', error));
