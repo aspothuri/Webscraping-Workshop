@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import './webscraping/newsscraper.js';
-import stockscrape from './webscraping/stockscraper';
+import stockscraper from './webscraping/stockscraper';
+import newsscraper from './webscraping/newsscraper.js';
 import axios from 'axios';
 
 function Window() {
@@ -20,11 +21,14 @@ function Window() {
       for (let i = 0; i < tickerList.length; i++) {
         const tickerSymbol = tickerList[i];
         try {
-          const { name, price, percent} = await stockscrape(tickerSymbol);
+          const { name, price, percent} = await stockscraper(tickerSymbol);
+          const { headlines, urls } = await newsscraper(tickerSymbol);
           newStockList.push({
             name: name,
             price: price,
-            percent: percent
+            percent: percent,
+            headlines: headlines,
+            urls: urls
           });
         } catch (error) {
           console.error('Error fetching stock data for', tickerSymbol, ':', error);
@@ -177,7 +181,13 @@ function Window() {
     {
       return (
         <div>
-          {Stock(stock.name, stock.price, stock.percent)}
+          <h1 className="detailName">{stock.name}</h1>
+          <h2 className="detailPrice">{stock.price}    {stock.percent}</h2>
+          {stock.headlines.map((headline, index) => (
+            <div key={index} className="headline">
+              <a href={stock.urls[index]} target="_blank" rel="noopener noreferrer">{headline}</a>
+            </div>
+          ))}
         </div>
       );
     }

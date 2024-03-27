@@ -2,9 +2,11 @@
 import axios from 'axios'
 import cheerio from 'cheerio'
 
-async function newscrape(ticker_symbol) {
+async function newsscraper(ticker_symbol) {
     try {
-        const response = await axios.get(`https://search.yahoo.com/search?p=${ticker_symbol}&fr=finance&fr2=p%3Afinvsrp%2Cm%3Asb`);
+        const targetUrl = `https://search.yahoo.com/search?p=${ticker_symbol}&fr=finance&fr2=p%3Afinvsrp%2Cm%3Asb`;
+        const url = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+        const response = await axios.get(url);
         
         const $ = cheerio.load(response.data);
 
@@ -19,7 +21,7 @@ async function newscrape(ticker_symbol) {
             headlines.push(headline);
             urls.push(url);
         });
-
+        console.log(ticker_symbol, headlines, urls);
         return { headlines, urls };
     } catch (error) {
         console.error('Error:', error);
@@ -27,12 +29,4 @@ async function newscrape(ticker_symbol) {
     }
 }
 
-// const ticker_symbol = 'AAPL';
-// scrapeYahooFinance(ticker_symbol)
-//     .then(data => {
-//         if (data) {
-//             console.log('Headlines:', data.headlines);
-//             console.log('URLs:', data.urls);
-//         }
-//     })
-//     .catch(error => console.error('Error:', error));
+export default newsscraper;
