@@ -4,7 +4,6 @@ import './App.css';
 import './webscraping/newsscraper.js';
 import stockscraper from './webscraping/stockscraper';
 import newsscraper from './webscraping/newsscraper.js';
-import axios from 'axios';
 
 function Window() {
   const [searched, setSearched] = useState(false);
@@ -72,7 +71,6 @@ function Window() {
   }
 
 
-  //make a search bar
   function SearchBar() {
     const handleSubmit = (event) => {
       event.preventDefault();
@@ -94,27 +92,14 @@ function Window() {
     );
   }
 
-  function GetStock(title) {
-    //webscraping stuff
-
-    // Fetch stock details based on searchedItem
-    // Example: Fetch data using axios and useEffect
-    // useEffect(() => {
-    //   axios.get(`API_ENDPOINT/${searchedItem}`)
-    //     .then(response => {
-    //       // Handle response data
-    //     })
-    //     .catch(error => {
-    //       // Handle error
-    //     });
-    // }, [searchedItem]);
-
-    
-  }
-
   function Stock(title, price, percent) {
+    const stockClicked = () =>  {
+      setSearched(true);
+      setSearchedItem(title);
+    }
+
     return (
-      <div className="outer">
+      <div className="outer" onClick={stockClicked}>
         <div className="stock">
           <h1 className="stockName">{title}</h1>
           <p className="stockPrice">Current Price: ${price}</p>
@@ -176,7 +161,6 @@ function Window() {
 
   function StockDetails() {
     const stock = stockList.find(stock => stock.name === searchedItem);
-    //get stock
     if(stock)
     {
       return (

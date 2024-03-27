@@ -14,7 +14,6 @@ async function newsscraper(ticker_symbol) {
         const urls = [];
 
         $('article.content').each((index, element) => {
-            // Extract headline and URL
             const headline = $(element).find('div.title > span.s-title').text().trim();
             const url = $(element).find('a.bkgLink').attr('href');
 
